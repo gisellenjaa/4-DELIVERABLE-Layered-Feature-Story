@@ -1,59 +1,135 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width,initial-scale=1">
-        <title>Composition Plan</title>
-        <style>
-            body{
-                font-family:Arial,sans-serif;
-                line-height:1.5;
-                max-width:90rem;
-                margin:auto;
-                padding:1rem;
-                color:#191919;
-                }
-            table{
-                width:100%;
-                border-collapse:collapse;
-                }
-            th,td{
-                padding:.6rem;
-                border:1px solid #999;
-                text-align:left;
-                vertical-align:top;
-                }
-            th{
-                background:#f1f1f1;
-                }
-        </style>
-        </head>
-        <body>
-            <h1>L6 · Composition Plan</h1>
-            <p>Complete one row for every positioned, layered, clipped, rounded, or shape-wrapped element. Duplicate rows as needed.</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Element</th>
-                        <th>Content purpose</th>
-                        <th>Normal-flow baseline</th>
-                        <th>Chosen technique and why</th>
-                        <th>Containing block / stacking context</th>
-                        <th>Fallback or disengagement</th>
-                        <th>Required test</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Example only</td>
-                        <td>Replace</td>
-                        <td>Replace</td>
-                        <td>Replace</td>
-                        <td>Replace</td>
-                        <td>Replace</td>
-                        <td>Replace</td>
-                    </tr>
-                </tbody>
-            </table>
-        </body>
-        </html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Composition Plan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.5;
+            max-width: 90rem;
+            margin: auto;
+            padding: 1rem;
+            color: #191919;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: .6rem;
+            border: 1px solid #999;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #f1f1f1;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>L6 · Composition Plan</h1>
+    <p>Complete one row for every positioned, layered, clipped, rounded, or shape-wrapped element. Duplicate rows as
+        needed.</p>
+    <table>
+        <thead>
+            <tr>
+                <th>Element</th>
+                <th>Content purpose</th>
+                <th>Normal-flow baseline</th>
+                <th>Chosen technique and why</th>
+                <th>Containing block / stacking context</th>
+                <th>Fallback or disengagement</th>
+                <th>Required test</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>.issue-badge</td>
+                <td>Small label that identifies what the story is about.</td>
+                <td>Without any special positioning, it displays with the normal document flow after the header
+                    element's
+                    introductory eyebrow and heading.</td>
+                <td>position: absolute - it lets the item sit at the top right corner, without obscuring the header
+                    elements or pushing any other content inside down.</td>
+                <td>.feature-header, and it positions within the limits of this container (which is "relative").</td>
+                <td>Below 400px, the badge will stop its absolute position and return to the natural document
+                    flow, under the main heading.</td>
+                <!--fallback: At most sizes, the badge does not overlap with anything. When testing on viewport mode, below 400px
+                    will have it touch the eyebrow title and obscure it.-->
+                <td>Testing at viewports of 320/768/1280px, 200% zoom, larger font and with CSS disabled.</td>
+                <!--
+                Observation stuff later...
+                Resizing the browser to the smallest size will not have it overlap unless it is below 400px.
+                Changing the font to a bigger size will cause the overlap much sooner when resizing, but the text
+                remains inside its container.
+                -->
+            </tr>
+
+            <tr>
+                <td>.story-guide</td>
+                <td>A small navigation menu that will jump to each story section</td>
+                <td>In the normal document flow, it sits at the very top of the main content.</td>
+                <td>position: sticky, allows it to remain visible as we scroll down.</td>
+                <td>It sticks within the 'main' element container, and will stop scrolling when 'main' ends.</td>
+                <td>Smaller viewports under 52rem, no special CSS techniques (position: sticky).</td>
+                <td>Testing at viewports of 320/768/1280px, 200% zoom, larger font and with CSS disabled. Clicking and
+                    keyboard-only navigation.</td>
+            </tr>
+
+            <tr>
+                <td>.feature-figure and its image</td>
+                <td>Provides a visual that supports the story, with a caption and image source credit. It's all
+                    contained together.</td>
+                <td>Regular document flow, positioned inside the section element, right below the h2 element.</td>
+                <td>The border groups the image with the caption so we can see that it belongs to the image, the radius
+                    gives it a stylize smoother edge, and the image element is stylized with clip-path to give it a
+                    shape. </td>
+                <td>The element has position: relative, so it becomes a contaner block for child elements (such as
+                    absolute, but it's not being used right now). The figure container doesn't create any stacking, but
+                    the image element clip-path does.</td>
+                <td>Without any of these stylings, the caption and image remain grouped, and the image displays with the
+                    normal rectangular/squre shape.</td>
+                <td>Clip-path disabled. Testing at viewports of 320/768/1280px, 200% zoom, larger font and with CSS
+                    disabled.</td>
+            </tr>
+
+            <tr>
+                <td>.pull-quote</td>
+                <td>It is a larger quotation that adds to the main story. It adds a human voice.</td>
+                <td>It sits inside the section element, right below the figure element.</td>
+                <td>Position: relative keeps it at a normal content flow, with -4rem shifting it to the side. It is
+                    layered by this property and by z-index, creating a stacking context.</td>
+                <td>position:relative and z-index creates a stacking context, which layers it above the surrounding
+                    content.</td>
+                <td>Sits below the figure/image, like a normal block of text or paragraph.</td>
+                <td>Testing at viewports of 320/768/1280px, 200% zoom, larger font and with CSS disabled.</td>
+            </tr>
+
+            <tr>
+                <td>.shape-portrait (image)</td>
+                <td>It provides a visual, that goes alongside the story. It's styling provide a unique shape for the
+                    text that wraps around it.</td>
+                <td>The image displays normally right after h2, in an orderly fashion, without the radius shape
+                    surrounding it.</td>
+                <td>float, shape-outside: circle(50%), and shape-margin are used. The stage list wraps curved and
+                    border-radius: 50% makes the image round.</td>
+                <td>The image is inside the section element, and that section element is inside the article element.
+                </td>
+                <td>Portrait will display normally without the circle margin, so the content will flow normally instead
+                    of wrapping around the image.</td>
+                <td>Shape-outside disabled. Testing at viewports of 320/768/1280px, 200% zoom, larger font and with CSS
+                    disabled.</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>
