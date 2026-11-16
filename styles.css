@@ -1,9 +1,3 @@
-/*
-
-FIX MENU AND QUOTE OVERLAP!!!!!!
-
-*/
-
 :root {
     /*Color*/
     --maroon-700: #8c1d40;
@@ -82,9 +76,15 @@ body {
 }
 
 .issue-badge {
-    position: absolute;
-    inset-block-start: 1rem;
-    inset-inline-end: 1rem;
+    display: inline-block;
+    /*
+    These are removed so by "default" it stays in a normal flow
+    (unless the screen is above 25rem)
+
+    position: absolute; <- moved to @media min 25rem
+    inset-block-start: 1rem; <- moved to @media min 25rem
+    inset-inline-end: 1rem; <- moved to @media min 25rem
+    */
     padding: .5rem;
     background: var(--color-accent);
     color: var(--color-badge-text);
@@ -163,11 +163,23 @@ img {
         z-index: var(--layer-sticky);
     }
 
+    .feature-figure {
+        padding-block-end: 2.5rem;
+        /* a block end padding so the quote doesn't obscure the caption/credit/source */
+    }
+
     .pull-quote {
         position: relative;
         z-index: var(--layer-raised);
-        margin-inline-start: -4rem;
+        /* 
+        This was causing the overlap with the menu and the quote...
+        margin-inline-start: -4rem; 
+        */
         background: var(--color-surface);
+        margin-block-start: -1.5rem;
+        /* This gives the quote an overlap on top of the figure's frame */
+        margin-inline-start: 1.5rem;
+        /* This gives a quote indentation styling */
     }
 
     @supports (shape-outside:circle(50%)) {
@@ -176,6 +188,23 @@ img {
             shape-outside: circle(50%);
             shape-margin: 1rem;
         }
+    }
+}
+
+@media (min-width:25rem) {
+
+    /* This way the badge remains in the corner at larger viewports */
+    .issue-badge {
+        position: absolute;
+        inset-block-start: 1rem;
+        inset-inline-end: 1rem;
+    }
+}
+
+/* For users that get motion sick */
+@media (prefers-reduced-motion: no-preference) {
+    html {
+        scroll-behavior: smooth;
     }
 }
 
