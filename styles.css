@@ -43,15 +43,22 @@
 *,
 *::before,
 *::after {
+     /* Keeping this so the layout widths are consistent */
     box-sizing: border-box;
 }
 
+/*
+Made this optional
 html {
     scroll-behavior: smooth;
 }
+*/
 
 body {
+    /* Removing the 8px edges, so the header
+    doesn't have that gap */
     margin: 0;
+
     color: var(--color-text);
     background: var(--color-surface);
     font-family: var(--font-family-default);
@@ -213,7 +220,8 @@ img {
         clip-path: polygon(0 0, 100% 5%, 94% 100%, 6% 94%);
     }
 }
-
+/* Making the focus more visible with bright blue,
+helps keyboard users see better where they are */
 :focus-visible {
     outline: .2rem solid var(--color-focus);
     outline-offset: .2rem;
